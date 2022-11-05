@@ -158,17 +158,37 @@ if __name__ == '__main__': # help='show version information and exit',
     parser.add_argument('--version', action='version', version=__version__)
     parser.add_argument('--config', help='configuration file path')
     parser.add_argument('--new-token', help='get a new token regardless of an unexpired token present', action='store_true')
+    parser.add_argument('--exit', help='tell SSH control master to exit', action='store_true')
     args = parser.parse_args()
     
     config_path = os.path.join(os.environ['HOME'], '.vault-gateway-login.yaml')
     if args.config:
         config_path = args.config
-    print(config_path)
     
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
     log_level = getattr(logging, config['log_level'], logging.ERROR)
     logging.basicConfig(level=log_level, format='%(asctime)s: %(message)s')
+
+    if args.exit:
+        if (pid := get_control_master_pid(config['ctl_path'])) is not None:
+            logging.info(f'SSH control master found at pid {pid}')
+            command = ['ssh', '-S', config['ctl_path'], '-O', 'exit']
+            logging.debug('Running command: ' + ' '.join(command))
+            p = sp.Popen(command, stdout=sp.PIPE, stderr=sp.PIPE)
+            try:
+                p.wait(timeout=1)
+            except sp.TimeoutExpired:
+                logging.info('Cannot exit nicely, sending kill signal')
+                os.kill(pid, signal.SIGKILL)
+        else:
+            logging.info('SSH control master not found')
+        try:
+            os.remove(config['ctl_path'])
+            logging.info(f'Deleted socket {config["ctl_path"]}')
+        except:
+            pass
+        exit(0)
 
     login_json_path = os.path.join(os.environ['HOME'], '.vault-login.json')
     token_path = os.path.join(os.environ['HOME'], '.vault-token')
