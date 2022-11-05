@@ -1,0 +1,24 @@
+# Gateway login details (should already be configured to accept a key)
+gw_host: "gateway.example.com"
+gw_port: 2222
+gw_user: "username"
+
+# SSH control master control path
+ctl_path: /tmp/remote-vault-login.sock
+
+# Remote Vault details
+vault_host: "vault.example.com"
+vault_port: 8200
+
+# Optional data for the Vault login request
+#vault_login_data: {name: "hwtoken"}
+
+# PKCS #11 shared library path
+pkcs11_module_path: "/usr/lib/pkcs11/opensc-pkcs11.so"
+
+# Hardware security key PIN
+sk_pin: 123456
+
+# Optional logging level.
+# One of DEBUG, INFO, WARNING, ERROR, CRITICAL (default: ERROR)
+#log_level: "DEBUG"
