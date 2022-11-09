@@ -153,8 +153,8 @@ def start_remote_session(ctl_path: str) -> None:
     p = sp.Popen(command)
     p.wait()
 
-if __name__ == '__main__': # help='show version information and exit',
-    parser = argparse.ArgumentParser(description='Process some integers.')
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Perform Vault login sequence on gateway machine.')
     parser.add_argument('--version', action='version', version=__version__)
     parser.add_argument('--config', help='configuration file path')
     parser.add_argument('--new-token', help='get a new token regardless of an unexpired token present', action='store_true')

@@ -4,7 +4,7 @@ gw_port: 2222
 gw_user: "username"
 
 # SSH control master control path
-ctl_path: /tmp/remote-vault-login.sock
+ctl_path: /tmp/vault-gateway-login.sock
 
 # Remote Vault details
 vault_host: "vault.example.com"
